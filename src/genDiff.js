@@ -1,10 +1,7 @@
 import _ from 'lodash';
 import fs from 'fs';
 
-const genDiff = (filepath1, filepath2) => {
-
-    const obj1 = JSON.parse(fs.readFileSync(filepath1));
-    const obj2 = JSON.parse(fs.readFileSync(filepath2));
+const genDiff = (obj1, obj2) => {
     const allKeys = [..._.keys(obj1), ..._.keys(obj2)];
     const keysByAlphabet = _.sortBy(_.uniq(allKeys));
 
@@ -44,7 +41,9 @@ const genDiff = (filepath1, filepath2) => {
 
     }, {});
 
-    return JSON.stringify(getDiff, null, '\n');
+    const resultJson = JSON.stringify(getDiff, null, 2);
+
+    return resultJson.replaceAll("\"","");
 }
 
 export default genDiff;
