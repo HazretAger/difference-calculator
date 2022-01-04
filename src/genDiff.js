@@ -32,7 +32,7 @@ const genDiff = (obj1, obj2) => {
       const node = {
         key,
         children: genDiff(obj1[key], obj2[key]),
-        type: 'nested'
+        type: 'nested',
       };
       return node;
     }
@@ -42,19 +42,17 @@ const genDiff = (obj1, obj2) => {
         key,
         value1,
         value2,
-        type: 'changed'
+        type: 'changed',
       };
       return node;
     }
 
-    else {
-      const node = {
-        key,
-        value: value1,
-        type: 'identical'
-      };
-      return node;
-    }
+    const node = {
+      key,
+      value: value1,
+      type: 'identical',
+    };
+    return node;
   });
 
   return data;

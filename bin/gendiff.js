@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import render from '../src/index.js';
+import mapDiff from '../src/index.js';
 
 const program = new Command();
 
@@ -10,8 +10,8 @@ program
   .option('-f, --format [type]', 'output format', 'stylish')
   .argument('<filepath1>')
   .argument('<filepath2>')
-  .action((filepath1, filepath2) => {
-    console.log(render(filepath1, filepath2));
+  .action((filepath1, filepath2, formatName) => {
+    console.log(mapDiff(filepath1, filepath2, formatName.format));
   });
 
 program.parse(process.argv);

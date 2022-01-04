@@ -5,4 +5,4 @@ const getFormat = {
   json: JSON.parse,
 };
 
-export default (file, format) => _.has(getFormat, format) ? getFormat[format](file) : yml.load(file);
+export default (file, format) => (_.has(getFormat, format) ? getFormat[format](file) : yml.load(file));
