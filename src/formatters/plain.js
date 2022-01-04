@@ -11,21 +11,19 @@ const plain = (data) => {
     return item;
   };
 
-  const iter = (data, items) => {
-    const result = data.filter(({ type }) => type !== 'identical')
+  const iter = (coll, items) => {
+    const result = coll.filter(({ type }) => type !== 'identical')
       .map((node) => {
         const { type, value, key } = node;
         const fullName = items ? [...items, key].join('.') : key;
-        switch (type) {
-          case 'added':
-            return `Property '${fullName}' was added with value: ${stringify(value)}`;
-          case 'removed':
-            return `Property '${fullName}' was removed`;
-          case 'changed':
-            return `Property '${fullName}' was updated. From ${stringify(node.value1)} to ${stringify(node.value2)}`;
-          case 'nested':
-            return iter(node.children, [...items, key]);
+        if (type === 'added') {
+          return `Property '${fullName}' was added with value: ${stringify(value)}`;
+        } if (type === 'removed') {
+          return `Property '${fullName}' was removed`;
+        } if (type === 'changed') {
+          return `Property '${fullName}' was updated. From ${stringify(node.value1)} to ${stringify(node.value2)}`;
         }
+        return iter(node.children, [...items, key]);
       });
 
     return result.join('\n');

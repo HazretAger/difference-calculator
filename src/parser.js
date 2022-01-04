@@ -1,8 +1,6 @@
-import _ from 'lodash';
 import yml from 'js-yaml';
 
-const getFormat = {
-  json: JSON.parse,
+export default (file, extName) => {
+  if (extName === 'yml' && 'yaml') return yml.load(file);
+  return JSON.parse(file);
 };
-
-export default (file, format) => (_.has(getFormat, format) ? getFormat[format](file) : yml.load(file));

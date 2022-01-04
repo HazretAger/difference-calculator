@@ -14,18 +14,16 @@ const render = (data) => {
   const iter = (dataAst, depth) => {
     const items = dataAst.map((elem) => {
       const { key, type, value } = elem;
-      switch (type) {
-        case 'added':
-          return `${space(depth + 2)}+ ${key}: ${stringlify(value, depth)}`;
-        case 'removed':
-          return `${space(depth + 2)}- ${key}: ${stringlify(value, depth)}`;
-        case 'changed':
-          return `${space(depth + 2)}- ${key}: ${stringlify(elem.value1, depth)}\n${space(depth + 2)}+ ${key}: ${stringlify(elem.value2, depth)}`;
-        case 'nested':
-          return `${space(depth + 2)}  ${key}: ${iter(elem.children, depth + 4)}`;
-        case 'identical':
-          return `${space(depth + 2)}  ${key}: ${stringlify(value, depth)}`;
+      if (type === 'added') {
+        return `${space(depth + 2)}+ ${key}: ${stringlify(value, depth)}`;
+      } if (type === 'removed') {
+        return `${space(depth + 2)}- ${key}: ${stringlify(value, depth)}`;
+      } if (type === 'changed') {
+        return `${space(depth + 2)}- ${key}: ${stringlify(elem.value1, depth)}\n${space(depth + 2)}+ ${key}: ${stringlify(elem.value2, depth)}`;
+      } if (type === 'nested') {
+        return `${space(depth + 2)}  ${key}: ${iter(elem.children, depth + 4)}`;
       }
+      return `${space(depth + 2)}  ${key}: ${stringlify(value, depth)}`;
     });
 
     return ['{', ...items, `${space(depth)}}`].join('\n');
