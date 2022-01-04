@@ -1,49 +1,63 @@
 import _ from 'lodash';
-import fs from 'fs';
 
 const genDiff = (obj1, obj2) => {
-    const allKeys = [..._.keys(obj1), ..._.keys(obj2)];
-    const keysByAlphabet = _.sortBy(_.uniq(allKeys));
+  const allKeys = [..._.keys(obj1), ..._.keys(obj2)];
+  const keysByAlphabet = _.sortBy(_.uniq(allKeys));
 
-    const getDiff = keysByAlphabet.reduce((result, key) => {
+  const data = keysByAlphabet.map((key) => {
+    const hasObj1Key = _.has(obj1, key);
+    const hasObj2Key = _.has(obj2, key);
+    const value1 = obj1[key];
+    const value2 = obj2[key];
 
-        const hasObj1Key = _.has(obj1, key);
-        const hasObj2Key = _.has(obj2, key);
-        const valueObj1 = obj1[key];
-        const valueObj2 = obj2[key];
+    if (!hasObj1Key && hasObj2Key) {
+      const node = {
+        key,
+        value: value2,
+        type: 'added',
+      };
+      return node;
+    }
 
-        if (!hasObj1Key && hasObj2Key) {
-            const newKey = `+ ${key}`;
-            result[newKey] = valueObj2;
-        }
+    if (hasObj1Key && !hasObj2Key) {
+      const node = {
+        key,
+        value: value1,
+        type: 'removed',
+      };
+      return node;
+    }
 
-        if (hasObj1Key && !hasObj2Key) {
-            const newKey = `- ${key}`;
-            result[newKey] = valueObj1;
-        }
+    if (_.isObject(value1) && _.isObject(value2)) {
+      const node = {
+        key,
+        children: genDiff(obj1[key], obj2[key]),
+        type: 'nested'
+      };
+      return node;
+    }
 
-        if (hasObj1Key && hasObj2Key) {
+    if (value1 !== value2) {
+      const node = {
+        key,
+        value1,
+        value2,
+        type: 'changed'
+      };
+      return node;
+    }
 
-            if (valueObj1 !== valueObj2) {
-                const newKey1 = `- ${key}`;
-                const newKey2 = `+ ${key}`;
+    else {
+      const node = {
+        key,
+        value: value1,
+        type: 'identical'
+      };
+      return node;
+    }
+  });
 
-                result[newKey1] = valueObj1;
-                result[newKey2] = valueObj2;
-
-            } else {
-                const newKey = `  ${key}`;
-                result[newKey] = valueObj1;
-            }
-        }
-
-        return result;
-
-    }, {});
-
-    const resultJson = JSON.stringify(getDiff, null, 2);
-
-    return resultJson.replaceAll("\"","");
-}
+  return data;
+};
 
 export default genDiff;
