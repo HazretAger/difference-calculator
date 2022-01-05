@@ -11,6 +11,7 @@ program
   .argument('<filepath1>')
   .argument('<filepath2>')
   .action((filepath1, filepath2, formatName) => {
-    console.log(mapDiff(filepath1, filepath2, formatName.format));
+    const diff = mapDiff(filepath1, filepath2, formatName.format);
+    console.log(diff);
   })
   .parse(process.argv);

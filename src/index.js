@@ -1,21 +1,14 @@
 import fs from 'fs';
 import path from 'path';
 import genDiff from './genDiff.js';
-import parser from './parser.js';
+import parse from './parser.js';
 import render from './formatters/index.js';
 
-export default (filepath1, filepath2, formatName) => {
-  const extName = path.extname(filepath1).slice(1);
-
-  const pathToFile1 = path.resolve(process.cwd(), filepath1);
-  const file1 = fs.readFileSync(pathToFile1, 'utf-8');
-  const fileObj1 = parser(file1, extName);
-
-  const pathToFile2 = path.resolve(process.cwd(), filepath2);
-  const file2 = fs.readFileSync(pathToFile2, 'utf-8');
-  const fileObj2 = parser(file2, extName);
-
-  const diff = genDiff(fileObj1, fileObj2);
-  const result = render(diff, formatName);
-  return result;
+export default (path1, path2, formatName = 'stylish') => {
+  const filePath1 = path.resolve('__fixtures__', path1);
+  const fileObj1 = parse(fs.readFileSync(filePath1, 'utf-8'), path1);
+  const filePath2 = path.resolve('__fixtures__', path2);
+  const fileObj2 = parse(fs.readFileSync(filePath2, 'utf-8'), path2);
+  const result = genDiff(fileObj1, fileObj2);
+  return render(result, formatName);
 };
