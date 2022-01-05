@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
-import genDiff from './genDiff';
-import parser from './parser';
-import render from './formatters/index';
+import genDiff from './genDiff.js';
+import parser from './parser.js';
+import render from './formatters/index.js';
 
 export default (filepath1, filepath2, formatName) => {
   const extName = path.extname(filepath1).slice(1);
