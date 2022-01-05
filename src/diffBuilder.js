@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const genDiff = (obj1, obj2) => {
+const buildDiff = (obj1, obj2) => {
   const allKeys = [..._.keys(obj1), ..._.keys(obj2)];
   const keysByAlphabet = _.sortBy(_.uniq(allKeys));
 
@@ -31,7 +31,7 @@ const genDiff = (obj1, obj2) => {
     if (_.isObject(value1) && _.isObject(value2)) {
       const node = {
         key,
-        children: genDiff(obj1[key], obj2[key]),
+        children: buildDiff(obj1[key], obj2[key]),
         type: 'nested',
       };
       return node;
@@ -58,4 +58,4 @@ const genDiff = (obj1, obj2) => {
   return data;
 };
 
-export default genDiff;
+export default buildDiff;

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import mapDiff from '../src/index.js';
+import genDiff from '../index.js'
 
 const program = new Command();
 
@@ -11,7 +11,7 @@ program
   .argument('<filepath1>')
   .argument('<filepath2>')
   .action((filepath1, filepath2, formatName) => {
-    const diff = mapDiff(filepath1, filepath2, formatName.format);
+    const diff = genDiff(filepath1, filepath2, formatName.format);
     console.log(diff);
   })
   .parse(process.argv);
